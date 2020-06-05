@@ -1,0 +1,6 @@
+---
+- hosts: "{{ NODE }}"
+# become: true
+# become_method: sudo
+  roles:
+    - ec2

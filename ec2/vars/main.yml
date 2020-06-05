@@ -1,0 +1,6 @@
+---
+region: us-west-2
+subnet: subnet-bb63a5c3
+pem_key: mahi
+instance_type: t2.micro
+ami: ami-0bc06212a56393ee1
