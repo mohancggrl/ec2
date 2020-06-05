@@ -1,8 +1,8 @@
 - name: Create security group
   ec2_group:
-    name: "demo_security_group"
-    description: "demo security group"
-    region: "{{ region }}"
+    name: demo_security_group
+    description: demo security group
+    region: us-west-2
     rules:
       - proto: tcp  # ssh
         from_port: 22
@@ -19,22 +19,21 @@
     rules_egress:
       - proto: all
         cidr_ip: 0.0.0.0/0
+    vpc_id: vpc-b93743c1
     register: demo_firewall
 
 - name: Create an EC2 instance
   ec2:
-    key_name: "{{ pem_key }}"
-    region: "{{ region }}"
+    key_name: mahi
+    region: us-west-2
     group_id: "{{ demo_firewall.group_id }}"
-    instance_type: "{{ instance_type }}"
-    image: "{{ ami }}"
+    instance_type: t2.micro
+    image: ami-0bc06212a56393ee1
     user_data: "{{ lookup('file', 'files/apache.sh') }}"
     wait: yes
     instance_tags:
-      env: "{{ env }}"
-    count_tag: env
-    exact_count: 1
-    vpc_subnet_id: "{{ subnet }}"
+      Name: AWS-Ansible
+    vpc_subnet_id: subnet-bb63a5c3
     assign_public_ip: yes
     register: ec2
 
@@ -47,9 +46,9 @@
   ec2_elb_lb:
     name: aws-elb-demo
     state: present
-    region: "{{ region }}"
+    region: us-west-2
     zones:
-      - us-west-1a
+      - us-west-2a
     listeners:
       - protocol: http
         load_balancer_port: 80
